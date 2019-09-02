@@ -1,9 +1,5 @@
 import React, { Component } from 'react';
-import Link from 'next/link';
-import Head from 'next/head';
-import Nav from '../components/nav';
 import fetch from 'isomorphic-unfetch';
-import Container from '@material-ui/core/Container';
 import "../style/index.scss";
 import Wrapper from '../components/wrappers/Wrapper';
 import data from "../data/data";
