@@ -1,0 +1,33 @@
+body {
+    font-family: fantasy;
+}
+
+.flexContent {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+
+    &__img {
+        width: 30%;
+    }
+
+    &__infos {
+
+        width: 65%;
+
+        &__identification {
+
+            padding: 15px;
+            border: 2px solid red;
+            border-radius: 30px;
+
+            &__name {
+                
+            }
+
+            &__description {
+
+            }
+        }
+    }
+}

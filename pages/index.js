@@ -38,7 +38,7 @@ class Index extends Component {
                 <Grid container spacing={3}>
                     {this.props.herosList.map((hero, i) =>
                         <Grid key={i} item xs={6} sm={4}>
-                            <HeroCard heroName={hero.name} imagePath={hero.thumbnail.path + "." + hero.thumbnail.extension} />
+                            <HeroCard heroId={hero.id} heroName={hero.name} imagePath={hero.thumbnail.path + "." + hero.thumbnail.extension} />
                         </Grid>
                     )}
                 </Grid>
