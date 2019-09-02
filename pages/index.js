@@ -1,91 +1,50 @@
-import React from 'react'
-import Link from 'next/link'
-import Head from 'next/head'
-import Nav from '../components/nav'
+import React, { Component } from 'react';
+import Link from 'next/link';
+import Head from 'next/head';
+import Nav from '../components/nav';
+import fetch from 'isomorphic-unfetch';
+import Container from '@material-ui/core/Container';
+import "../style/index.scss";
+import Wrapper from '../components/wrappers/Wrapper';
+import data from "../data/data";
+import crypto from "crypto";
+import HeroCard from '../components/cards/HeroCard';
+import { Grid } from '@material-ui/core';
 
-const Home = () => (
-  <div>
-    <Head>
-      <title>Home</title>
-    </Head>
+class Index extends Component {
 
-    <Nav />
+    static async getInitialProps({ req }) {
+        const ts = Math.floor(Date.now() / 1000);
+        const apikey = data.API_PUBLIC;
+        const concatenedString = ts + data.API_PRIVATE + data.API_PUBLIC;
+        const hash = crypto.createHash('md5').update(concatenedString).digest('hex');
+        const url = `http://gateway.marvel.com:80/v1/public/characters?ts=${ts}&apikey=${apikey}&hash=${hash}`;
+        //console.log(url);
+        const res = await fetch(url);
+        const json = await res.json();
+        //console.log(json);
+        return {
+            herosList: json.data.results
+        }
+    }
 
-    <div className='hero'>
-      <h1 className='title'>Welcome to Next.js!</h1>
-      <p className='description'>
-        To get started, edit <code>pages/index.js</code> and save to reload.
-      </p>
+    render() {
+        return (
+            <Wrapper>
+                <h1>Liste des super héros :</h1>
+                <div className="listHeros">
 
-      <div className='row'>
-        <Link href='https://github.com/zeit/next.js#setup'>
-          <a className='card'>
-            <h3>Getting Started &rarr;</h3>
-            <p>Learn more about Next.js on GitHub and in their examples.</p>
-          </a>
-        </Link>
-        <Link href='https://github.com/zeit/next.js/tree/master/examples'>
-          <a className='card'>
-            <h3>Examples &rarr;</h3>
-            <p>Find other example boilerplates on the Next.js GitHub.</p>
-          </a>
-        </Link>
-        <Link href='https://github.com/zeit/next.js'>
-          <a className='card'>
-            <h3>Create Next App &rarr;</h3>
-            <p>Was this tool helpful? Let us know how we can improve it!</p>
-          </a>
-        </Link>
-      </div>
-    </div>
+                </div>
+                <Grid container spacing={3}>
+                    {this.props.herosList.map((hero, i) =>
+                        <Grid key={i} item xs={6} sm={4}>
+                            <HeroCard heroName={hero.name} imagePath={hero.thumbnail.path + "." + hero.thumbnail.extension} />
+                        </Grid>
+                    )}
+                </Grid>
+            </Wrapper>
+        );
+    }
+}
 
-    <style jsx>{`
-      .hero {
-        width: 100%;
-        color: #333;
-      }
-      .title {
-        margin: 0;
-        width: 100%;
-        padding-top: 80px;
-        line-height: 1.15;
-        font-size: 48px;
-      }
-      .title,
-      .description {
-        text-align: center;
-      }
-      .row {
-        max-width: 880px;
-        margin: 80px auto 40px;
-        display: flex;
-        flex-direction: row;
-        justify-content: space-around;
-      }
-      .card {
-        padding: 18px 18px 24px;
-        width: 220px;
-        text-align: left;
-        text-decoration: none;
-        color: #434343;
-        border: 1px solid #9b9b9b;
-      }
-      .card:hover {
-        border-color: #067df7;
-      }
-      .card h3 {
-        margin: 0;
-        color: #067df7;
-        font-size: 18px;
-      }
-      .card p {
-        margin: 0;
-        padding: 12px 0 0;
-        font-size: 13px;
-        color: #333;
-      }
-    `}</style>
-  </div>
-)
-
-export default Home
+export default Index;
